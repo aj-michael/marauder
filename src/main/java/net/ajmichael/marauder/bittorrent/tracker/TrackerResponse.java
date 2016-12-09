@@ -1,4 +1,3 @@
 package net.ajmichael.marauder.bittorrent.tracker;
 
-public final class TrackerResponse {
-}
+public final class TrackerResponse {}

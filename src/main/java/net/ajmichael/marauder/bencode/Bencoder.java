@@ -1,4 +1,3 @@
 package net.ajmichael.marauder.bencode;
 
-public final class Bencoder {
-}
+public final class Bencoder {}
