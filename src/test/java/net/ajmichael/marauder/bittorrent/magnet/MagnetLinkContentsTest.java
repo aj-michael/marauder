@@ -20,15 +20,15 @@ public class MagnetLinkContentsTest {
         new URI(Resources.toString(getResource("good-magnet-link.txt"), StandardCharsets.UTF_8));
     MagnetLinkContents contents = MagnetLinkContents.parse(magnetLink);
     assertThat(contents.exactTopic())
-        .isEqualTo("urn:btih:49636cc8a630f47329074383a7dc11d7c284abe4");
+        .isEqualTo(URI.create("urn:btih:49636cc8a630f47329074383a7dc11d7c284abe4"));
     assertThat(contents.displayName()).isEqualTo("Moana+2016+HDRip.x264-AMIABLE");
     assertThat(contents.trackerAddresses())
         .containsExactly(
-            "udp://tracker.leechers-paradise.org:6969",
-            "udp://zer0day.ch:1337",
-            "udp://open.demonii.com:1337",
-            "udp://tracker.coppersurfer.tk:6969",
-            "udp://exodus.desync.com:6969");
+            URI.create("udp://tracker.leechers-paradise.org:6969"),
+            URI.create("udp://zer0day.ch:1337"),
+            URI.create("udp://open.demonii.com:1337"),
+            URI.create("udp://tracker.coppersurfer.tk:6969"),
+            URI.create("udp://exodus.desync.com:6969"));
   }
 
   private static URL getResource(String name) {
