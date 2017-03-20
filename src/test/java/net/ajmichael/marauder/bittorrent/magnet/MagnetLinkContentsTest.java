@@ -19,8 +19,13 @@ public class MagnetLinkContentsTest {
     URI magnetLink =
         new URI(Resources.toString(getResource("good-magnet-link.txt"), StandardCharsets.UTF_8));
     MagnetLinkContents contents = MagnetLinkContents.parse(magnetLink);
+<<<<<<< Updated upstream
+    assertThat(contents.exactTopic()).isEqualTo(new AutoValue_MagnetLinkContents_ExactTopic(null));
+=======
     assertThat(contents.exactTopic())
-        .isEqualTo(URI.create("urn:btih:49636cc8a630f47329074383a7dc11d7c284abe4"));
+        .isEqualTo(
+            new AutoValue_MagnetLinkContents_ExactTopic(null));
+>>>>>>> Stashed changes
     assertThat(contents.displayName()).isEqualTo("Moana+2016+HDRip.x264-AMIABLE");
     assertThat(contents.trackerAddresses())
         .containsExactly(
