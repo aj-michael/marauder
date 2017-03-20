@@ -67,45 +67,6 @@ class UdpTrackerProtocol {
     };
   }
 
-  @AutoValue
-  abstract static class ConnectRequest {
-
-    abstract int transactionId();
-
-    ByteBuffer getByteBuffer() {
-      ByteBuffer connectRequestBytes =
-          ByteBuffer.allocate(16)
-              .putLong(PROTOCOL_ID)
-              .putInt(Action.CONNECT.getValue())
-              .putInt(transactionId());
-      connectRequestBytes.flip();
-      return connectRequestBytes;
-    }
-  }
-
-  @AutoValue
-  abstract static class ConnectResponse {
-
-    abstract int actionValue();
-
-    abstract int transactionId();
-
-    abstract long connectionId();
-
-    static ConnectResponse readFromChannel(DatagramChannel datagramChannel) throws IOException {
-      ByteBuffer connectResponseBytes = ByteBuffer.allocate(16).order(ByteOrder.BIG_ENDIAN);
-      datagramChannel.receive(connectResponseBytes);
-      connectResponseBytes.rewind();
-      ConnectResponse connectResponse =
-          new AutoValue_UdpTrackerProtocol_ConnectResponse(
-              connectResponseBytes.getInt(),
-              connectResponseBytes.getInt(),
-              connectResponseBytes.getLong());
-      LOGGER.info("Received tracker connect response: " + connectResponse);
-      return connectResponse;
-    }
-  }
-
   Callable<AnnounceResponse> announce(
       int transactionId, long connectionId, MagnetLinkContents magnetLinkContents) {
     return () -> {
@@ -131,6 +92,79 @@ class UdpTrackerProtocol {
       waitForReadableDatagramChannel();
       return AnnounceResponse.readFromChannel(datagramChannel);
     };
+  }
+
+  enum Action {
+    CONNECT(0),
+    ANNOUNCE(1),
+    SCRAPE(2),
+    ERROR(3);
+
+    private final int value;
+
+    Action(int value) {
+      this.value = value;
+    }
+
+    private int getValue() {
+      return value;
+    }
+  }
+
+  enum Event {
+    NONE(0),
+    COMPLETED(1),
+    STARTED(2),
+    STOPPED(3);
+
+    private final int value;
+
+    Event(int value) {
+      this.value = value;
+    }
+
+    private int getValue() {
+      return value;
+    }
+  }
+
+  @AutoValue
+  abstract static class ConnectRequest {
+
+    abstract int transactionId();
+
+    ByteBuffer getByteBuffer() {
+      ByteBuffer connectRequestBytes =
+          ByteBuffer.allocate(16)
+              .putLong(PROTOCOL_ID)
+              .putInt(Action.CONNECT.getValue())
+              .putInt(transactionId());
+      connectRequestBytes.flip();
+      return connectRequestBytes;
+    }
+  }
+
+  @AutoValue
+  abstract static class ConnectResponse {
+
+    static ConnectResponse readFromChannel(DatagramChannel datagramChannel) throws IOException {
+      ByteBuffer connectResponseBytes = ByteBuffer.allocate(16).order(ByteOrder.BIG_ENDIAN);
+      datagramChannel.receive(connectResponseBytes);
+      connectResponseBytes.rewind();
+      ConnectResponse connectResponse =
+          new AutoValue_UdpTrackerProtocol_ConnectResponse(
+              connectResponseBytes.getInt(),
+              connectResponseBytes.getInt(),
+              connectResponseBytes.getLong());
+      LOGGER.info("Received tracker connect response: " + connectResponse);
+      return connectResponse;
+    }
+
+    abstract int actionValue();
+
+    abstract int transactionId();
+
+    abstract long connectionId();
   }
 
   @AutoValue
@@ -249,40 +283,6 @@ class UdpTrackerProtocol {
       abstract Builder setSeeders(int value);
 
       abstract Builder setPeers(ImmutableList<Peer> value);
-    }
-  }
-
-  enum Action {
-    CONNECT(0),
-    ANNOUNCE(1),
-    SCRAPE(2),
-    ERROR(3);
-
-    private final int value;
-
-    private int getValue() {
-      return value;
-    }
-
-    Action(int value) {
-      this.value = value;
-    }
-  }
-
-  enum Event {
-    NONE(0),
-    COMPLETED(1),
-    STARTED(2),
-    STOPPED(3);
-
-    private final int value;
-
-    private int getValue() {
-      return value;
-    }
-
-    Event(int value) {
-      this.value = value;
     }
   }
 }

@@ -14,18 +14,16 @@ import org.junit.runners.JUnit4;
 public class MagnetLinkContentsTest {
   private static final String RESOURCE_PREFIX = "net/ajmichael/marauder/bittorrent/magnet/";
 
+  private static URL getResource(String name) {
+    return Resources.getResource(RESOURCE_PREFIX + name);
+  }
+
   @Test
   public void testParseMagnetLink() throws Exception {
     URI magnetLink =
         new URI(Resources.toString(getResource("good-magnet-link.txt"), StandardCharsets.UTF_8));
     MagnetLinkContents contents = MagnetLinkContents.parse(magnetLink);
-<<<<<<< Updated upstream
     assertThat(contents.exactTopic()).isEqualTo(new AutoValue_MagnetLinkContents_ExactTopic(null));
-=======
-    assertThat(contents.exactTopic())
-        .isEqualTo(
-            new AutoValue_MagnetLinkContents_ExactTopic(null));
->>>>>>> Stashed changes
     assertThat(contents.displayName()).isEqualTo("Moana+2016+HDRip.x264-AMIABLE");
     assertThat(contents.trackerAddresses())
         .containsExactly(
@@ -34,9 +32,5 @@ public class MagnetLinkContentsTest {
             URI.create("udp://open.demonii.com:1337"),
             URI.create("udp://tracker.coppersurfer.tk:6969"),
             URI.create("udp://exodus.desync.com:6969"));
-  }
-
-  private static URL getResource(String name) {
-    return Resources.getResource(RESOURCE_PREFIX + name);
   }
 }

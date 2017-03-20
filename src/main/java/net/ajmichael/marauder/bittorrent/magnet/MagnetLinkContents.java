@@ -57,19 +57,15 @@ public abstract class MagnetLinkContents {
   @AutoValue
   public abstract static class ExactTopic {
 
-    @SuppressWarnings("mutable")
-    public abstract byte[] infoHash();
-
     static ExactTopic parseFromUri(URI uri) {
       Preconditions.checkArgument(uri.getScheme().equals("urn"));
       Preconditions.checkArgument(uri.getSchemeSpecificPart().startsWith("btih:"));
       String infoHash = uri.getSchemeSpecificPart().split("btih:")[1];
-<<<<<<< Updated upstream
       return new AutoValue_MagnetLinkContents_ExactTopic(
           BaseEncoding.base16().decode(infoHash.toUpperCase()));
-=======
-      return new AutoValue_MagnetLinkContents_ExactTopic(BaseEncoding.base16().decode(infoHash.toUpperCase()));
->>>>>>> Stashed changes
     }
+
+    @SuppressWarnings("mutable")
+    public abstract byte[] infoHash();
   }
 }

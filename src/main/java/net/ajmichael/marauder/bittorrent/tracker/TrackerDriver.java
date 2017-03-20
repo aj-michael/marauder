@@ -42,19 +42,12 @@ public class TrackerDriver {
     UdpTrackerProtocol.ConnectResponse connectResponse =
         connectResponseFuture.get(10, TimeUnit.SECONDS);
 
-<<<<<<< Updated upstream
     Future<AnnounceResponse> announceResponseFuture =
         executorService.submit(
             udpTrackerProtocol.announce(
                 transactionId, connectResponse.connectionId(), magnetLinkContents));
     UdpTrackerProtocol.AnnounceResponse announceResponse =
         announceResponseFuture.get(10, TimeUnit.SECONDS);
-=======
-    Future<AnnounceResponse> announceResponseFuture = executorService.submit(
-        udpTrackerProtocol.announce(
-            transactionId, connectResponse.connectionId(), magnetLinkContents));
-    UdpTrackerProtocol.AnnounceResponse announceResponse = announceResponseFuture.get(10, TimeUnit.SECONDS);
->>>>>>> Stashed changes
 
     executorService.shutdown();
     System.out.println(connectResponse);
